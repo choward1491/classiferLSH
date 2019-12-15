@@ -10,6 +10,11 @@
 		3F3322FD23A425E700D01862 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F3322FC23A425E700D01862 /* main.cpp */; };
 		3F33230523A4318300D01862 /* libomp.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 3F33230323A4318300D01862 /* libomp.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		3F33230823A435EA00D01862 /* libomp.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F33230723A435EA00D01862 /* libomp.dylib */; };
+		3F33230B23A4A0B300D01862 /* bitvector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F33230A23A4A0B300D01862 /* bitvector.cpp */; };
+		3F33230E23A4C33300D01862 /* classicalLSH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F33230C23A4C33300D01862 /* classicalLSH.cpp */; };
+		3F33231123A4C34300D01862 /* coveringLSH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F33230F23A4C34300D01862 /* coveringLSH.cpp */; };
+		3F33231323A5982200D01862 /* libtbb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F33231223A5982200D01862 /* libtbb.dylib */; };
+		3F33231623A5AD1600D01862 /* unit_tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F33231423A5AD1600D01862 /* unit_tests.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -38,12 +43,18 @@
 /* Begin PBXFileReference section */
 		3F3322F023A4253100D01862 /* classifierLSH */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = classifierLSH; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F3322FC23A425E700D01862 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		3F3322FE23A4297200D01862 /* classicalLSH.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = classicalLSH.hpp; sourceTree = "<group>"; };
-		3F3322FF23A4298500D01862 /* classicalLSH.hxx */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = classicalLSH.hxx; sourceTree = "<group>"; };
-		3F33230023A429A900D01862 /* coveringLSH.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = coveringLSH.hpp; sourceTree = "<group>"; };
-		3F33230123A429C600D01862 /* coveringLSH.hxx */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = coveringLSH.hxx; sourceTree = "<group>"; };
 		3F33230323A4318300D01862 /* libomp.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libomp.dylib; path = ../../../../../usr/local/Cellar/libomp/9.0.0/lib/libomp.dylib; sourceTree = "<group>"; };
 		3F33230723A435EA00D01862 /* libomp.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libomp.dylib; path = ../../../../../usr/local/Cellar/llvm/9.0.0_1/lib/libomp.dylib; sourceTree = "<group>"; };
+		3F33230923A45D0800D01862 /* bitvector.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = bitvector.hpp; sourceTree = "<group>"; };
+		3F33230A23A4A0B300D01862 /* bitvector.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = bitvector.cpp; sourceTree = "<group>"; };
+		3F33230C23A4C33300D01862 /* classicalLSH.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = classicalLSH.cpp; sourceTree = "<group>"; };
+		3F33230D23A4C33300D01862 /* classicalLSH.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = classicalLSH.hpp; sourceTree = "<group>"; };
+		3F33230F23A4C34300D01862 /* coveringLSH.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = coveringLSH.cpp; sourceTree = "<group>"; };
+		3F33231023A4C34300D01862 /* coveringLSH.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = coveringLSH.hpp; sourceTree = "<group>"; };
+		3F33231223A5982200D01862 /* libtbb.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtbb.dylib; path = ../../../../../usr/local/Cellar/tbb/2019_U9/lib/libtbb.dylib; sourceTree = "<group>"; };
+		3F33231423A5AD1600D01862 /* unit_tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = unit_tests.cpp; sourceTree = "<group>"; };
+		3F33231523A5AD1600D01862 /* unit_tests.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = unit_tests.hpp; sourceTree = "<group>"; };
+		3F33231923A6F2E200D01862 /* lsh_defn.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = lsh_defn.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F33231323A5982200D01862 /* libtbb.dylib in Frameworks */,
 				3F33230823A435EA00D01862 /* libomp.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -79,10 +91,15 @@
 			isa = PBXGroup;
 			children = (
 				3F3322FC23A425E700D01862 /* main.cpp */,
-				3F3322FE23A4297200D01862 /* classicalLSH.hpp */,
-				3F3322FF23A4298500D01862 /* classicalLSH.hxx */,
-				3F33230023A429A900D01862 /* coveringLSH.hpp */,
-				3F33230123A429C600D01862 /* coveringLSH.hxx */,
+				3F33230923A45D0800D01862 /* bitvector.hpp */,
+				3F33230A23A4A0B300D01862 /* bitvector.cpp */,
+				3F33230C23A4C33300D01862 /* classicalLSH.cpp */,
+				3F33230D23A4C33300D01862 /* classicalLSH.hpp */,
+				3F33230F23A4C34300D01862 /* coveringLSH.cpp */,
+				3F33231023A4C34300D01862 /* coveringLSH.hpp */,
+				3F33231423A5AD1600D01862 /* unit_tests.cpp */,
+				3F33231523A5AD1600D01862 /* unit_tests.hpp */,
+				3F33231923A6F2E200D01862 /* lsh_defn.hpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -90,6 +107,7 @@
 		3F33230223A4318300D01862 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3F33231223A5982200D01862 /* libtbb.dylib */,
 				3F33230723A435EA00D01862 /* libomp.dylib */,
 				3F33230323A4318300D01862 /* libomp.dylib */,
 			);
@@ -154,7 +172,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F33231623A5AD1600D01862 /* unit_tests.cpp in Sources */,
+				3F33231123A4C34300D01862 /* coveringLSH.cpp in Sources */,
+				3F33230B23A4A0B300D01862 /* bitvector.cpp in Sources */,
 				3F3322FD23A425E700D01862 /* main.cpp in Sources */,
+				3F33230E23A4C33300D01862 /* classicalLSH.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -277,10 +299,14 @@
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMPILER_INDEX_STORE_ENABLE = NO;
-				HEADER_SEARCH_PATHS = /usr/local/Cellar/llvm/9.0.0_1/lib/clang/9.0.0/include/;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/Cellar/llvm/9.0.0_1/lib/clang/9.0.0/include/,
+					/usr/local/Cellar/tbb/2019_U9/include,
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/local/Cellar/llvm/9.0.0_1/lib/,
+					/usr/local/Cellar/tbb/2019_U9/lib,
 				);
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
@@ -297,10 +323,14 @@
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMPILER_INDEX_STORE_ENABLE = NO;
-				HEADER_SEARCH_PATHS = /usr/local/Cellar/llvm/9.0.0_1/lib/clang/9.0.0/include/;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/Cellar/llvm/9.0.0_1/lib/clang/9.0.0/include/,
+					/usr/local/Cellar/tbb/2019_U9/include,
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/local/Cellar/llvm/9.0.0_1/lib/,
+					/usr/local/Cellar/tbb/2019_U9/lib,
 				);
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",

@@ -8,17 +8,17 @@
 
 #include <iostream>
 #include "omp.h"
+#include "bitvector.hpp"
+#include "classicalLSH.hpp"
+#include "unit_tests.hpp"
 
 int main(int argc, const char * argv[]) {
     
     // set the number of threads to use
     omp_set_num_threads(8);
     
-    // run some openmp stuff
-    #pragma omp parallel
-    #pragma omp critical
-        std::cout << "Greetings from thread "<<omp_get_thread_num()<<std::endl;
-        return 0;
+    unit_test::run_tests();
+    unit_test::find_1D_approx_rnear();
     
     // complete the code
     return 0;
