@@ -18,7 +18,7 @@ int main(int argc, const char * argv[]) {
     omp_set_num_threads(8);
     
     unit_test::run_tests();
-    unit_test::find_1D_approx_rnear();
+    unit_test::classicalLSH_find_1D_approx_rnear();
     
     // complete the code
     return 0;

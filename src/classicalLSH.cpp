@@ -45,13 +45,13 @@ namespace classical {
         size_t N = ds_ref->size();
         
         // build each hash table using random bitvector construction
-        //#pragma omp parallel for
+        #pragma omp parallel for
         for(uint32_t i = 0; i < L; ++i){
             
             // define new random hash function
             lsh::hash_func hf; hf.bv.set_parameters(d, U);
             for(size_t j = 0; j < hf.bv.num_compressed_ints(); ++j){
-                //#pragma omp atomic
+                #pragma omp atomic
                 seed += (( a * seed + b ) % m - seed);
                 hf.bv.set_int(j, seed );
             }
