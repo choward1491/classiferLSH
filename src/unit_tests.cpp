@@ -123,14 +123,14 @@ bool classicalLSH_find_1D_approx_rnear() {
     using tuple_t = typename lsh::tuple_t;
     
     // build the dataset
-    uint32_t d = 1, U = 256;
+    uint32_t d = 1, U = 2*1024;
     std::vector<point_t> dataset(U);
     for(uint32_t i = 0; i < U; ++i){
         dataset[i].push_back(i);
     }
     
     // choose the parameters we care about
-    uint32_t r = 10, c = 2, k = 15;
+    uint32_t r = 5, c = 2, k = 5;
     
     // build the LSH for r-near
     classical::near_lsh rLSH;
@@ -144,7 +144,7 @@ bool classicalLSH_find_1D_approx_rnear() {
     point_t q { 100 };
     int num_found = rLSH.k_near(q, k, result_indices);
     is_correct = (num_found >= k);
-    //std::cout << "Number matches found are: " << num_found << std::endl;
+    std::cout << "Number matches found are: " << num_found << std::endl;
     
     
     // print actual errors
@@ -164,14 +164,14 @@ bool coveringLSH_find_1D_approx_rnear() {
     using tuple_t = typename lsh::tuple_t;
     
     // build the dataset
-    uint32_t d = 1, U = 128;
+    uint32_t d = 1, U = 2*1024;
     std::vector<point_t> dataset(U);
     for(uint32_t i = 0; i < U; ++i){
         dataset[i].push_back(i);
     }
     
     // choose the parameters we care about
-    uint32_t r = 10, c = 2, k = 15;
+    uint32_t r = 5, c = 2, k = 5;
     
     // build the LSH for r-near
     covering::near_lsh rLSH;
@@ -184,7 +184,7 @@ bool coveringLSH_find_1D_approx_rnear() {
     point_t q { 100 };
     int num_found = rLSH.k_near(q, k, result_indices);
     bool is_correct = (num_found >= k);
-    //std::cout << "Number matches found are: " << num_found << std::endl;
+    std::cout << "Number matches found are: " << num_found << std::endl;
     
     // print actual errors
     for(tuple_t tuple : result_indices){
@@ -213,7 +213,7 @@ void run_tests() {
     TEST(bitvec_norm);
     TEST(bitvec_equality);
     TEST(bitvec_dist);
-    TEST(classicalLSH_find_1D_approx_rnear);
+    //TEST(classicalLSH_find_1D_approx_rnear);
     TEST(coveringLSH_find_1D_approx_rnear);
     
     // run the tests
