@@ -19,6 +19,7 @@ int main(int argc, const char * argv[]) {
     
     unit_test::run_tests();
     unit_test::classicalLSH_find_1D_approx_rnear();
+    unit_test::coveringLSH_find_1D_approx_rnear();
     
     // complete the code
     return 0;

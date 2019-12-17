@@ -34,6 +34,9 @@ namespace util {
     void bitvec::set_int(int idx, uint32_t v) {
         bits[idx] = v;
     }
+    uint32_t bitvec::get_int(int idx) const {
+        return bits[idx];
+    }
 
     void bitvec::set_parameters(uint32_t dims, uint32_t univ_size) {
         d = dims;

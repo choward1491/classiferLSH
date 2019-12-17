@@ -49,6 +49,7 @@ namespace covering {
         
         // useful helper functions
         void orig2bitvec(const lsh::point_t& p, util::bitvec& bv) const;
+        void set_v_vector(util::bitvec& bv, uint32_t vidx) const;
         
     };
 

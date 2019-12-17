@@ -24,6 +24,7 @@ namespace util {
         void set(int dim, uint32_t v);
         void set_int(int idx, uint32_t v);
         uint32_t get(int dim) const;
+        uint32_t get_int(int idx) const;
         uint32_t num_dims() const;
         uint32_t univ_size() const;
         size_t num_bits() const;

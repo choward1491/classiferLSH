@@ -30,7 +30,7 @@ namespace covering {
     void near_lsh::build() {
         
         // compute nunmber of hash functions and corresponding hash tables
-        uint32_t L = 20 * static_cast<uint32_t>(std::pow(ds_ref->size(), 1.0/c));
+        size_t L = (1 << (r+1)) - 1;
         
         // resize the hash table list
         hash_tables.clear();
@@ -43,28 +43,67 @@ namespace covering {
         // dataset size
         size_t N = ds_ref->size();
         
-        // build each hash table using random bitvector construction
-        //#pragma omp parallel for
-        for(uint32_t i = 0; i < L; ++i){
-            
-            // define new random hash function
-            lsh::hash_func hf; hf.bv.set_parameters(d, U);
-            for(size_t j = 0; j < hf.bv.num_compressed_ints(); ++j){
-                //#pragma omp atomic
-                seed += (( a * seed + b ) % m - seed);
-                hf.bv.set_int(j, seed );
-            }
-            
-            // get the ith hash table
-            auto& ht = hash_tables[i];
-            ht = lsh::hashtable_t(N, hf);
-            
-            // hash dataset into the ith hash table
-            for(size_t j = 0; j < N; ++j){
-                ht[bit_dataset[j]] = j;
-            }
-        }// loop number of hash functions
+        // compute the random m(i) vectors
+        uint32_t tot_dim = d*U;
+        std::vector<util::bitvec> M(tot_dim);
         
+        #pragma omp parallel
+        {
+            // build each of the m(i) vectors
+            #pragma omp for
+            for(uint32_t i = 0; i < tot_dim; ++i){
+                M[i].set_parameters(r+1, 1);
+                
+                // set random bits for m(i)
+                for(uint32_t j = 0; j < (r+1); ++j){
+                    #pragma omp atomic
+                    seed += (( a * seed + b ) % m - seed);
+                    M[i].set(j, seed % 2);
+                }
+            }
+            
+            // build each hash table using random bitvector construction
+            #pragma omp for
+            for(uint32_t i = 0; i < L; ++i){
+                
+                // construct the current v vector
+                util::bitvec v;
+                v.set_parameters(r+1,1);
+                v.set_int(0, i+1);
+                
+                // define new random hash function
+                lsh::hash_func hf; hf.bv.set_parameters(d*U, 1);
+                for(size_t j = 0; j < hf.bv.num_bits(); ++j){
+                    hf.bv.set(j, M[j].dot(v) % 2 );
+                }
+                
+                // get the ith hash table
+                auto& ht = hash_tables[i];
+                ht = lsh::hashtable_t(N, hf);
+                
+                // hash dataset into the ith hash table
+                for(size_t j = 0; j < N; ++j){
+                    ht[bit_dataset[j]] = j;
+                }
+            }// loop number of hash functions
+        }
+        
+    }
+
+    void near_lsh::set_v_vector(util::bitvec& bv, uint32_t vidx) const {
+        uint32_t idx = vidx + 1, count = 0;
+        
+        // length of bitvec
+        auto n = bv.num_bits();
+        
+        // construct bitvector based on the index
+        while(count != idx){
+            for(uint32_t i = 0; i < n; ++i){
+                if( bv.get(i) ){ bv.set(i, 0); }
+                else{ bv.set(i, 1); break; }
+            }
+            ++count;
+        }// end while
     }
 
     int near_lsh::k_near( const lsh::point_t& q, int k, std::set<lsh::tuple_t>& nearest_ind ) const {

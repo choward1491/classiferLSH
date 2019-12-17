@@ -123,7 +123,7 @@ bool classicalLSH_find_1D_approx_rnear() {
     using tuple_t = typename lsh::tuple_t;
     
     // build the dataset
-    uint32_t d = 1, U = 128;
+    uint32_t d = 1, U = 256;
     std::vector<point_t> dataset(U);
     for(uint32_t i = 0; i < U; ++i){
         dataset[i].push_back(i);
@@ -140,7 +140,7 @@ bool classicalLSH_find_1D_approx_rnear() {
     
     // query
     std::set<tuple_t> result_indices;
-    point_t q { 30 };
+    point_t q { 100 };
     int num_found = rLSH.k_near(q, k, result_indices);
     std::cout << "Number matches found are: " << num_found << std::endl;
     
@@ -177,7 +177,7 @@ bool coveringLSH_find_1D_approx_rnear() {
     
     // query
     std::set<tuple_t> result_indices;
-    point_t q { 30 };
+    point_t q { 100 };
     int num_found = rLSH.k_near(q, k, result_indices);
     std::cout << "Number matches found are: " << num_found << std::endl;
     
