@@ -139,19 +139,23 @@ bool classicalLSH_find_1D_approx_rnear() {
     rLSH.build();
     
     // query
+    bool is_correct = true;
     std::set<tuple_t> result_indices;
     point_t q { 100 };
     int num_found = rLSH.k_near(q, k, result_indices);
-    std::cout << "Number matches found are: " << num_found << std::endl;
+    is_correct = (num_found >= k);
+    //std::cout << "Number matches found are: " << num_found << std::endl;
+    
     
     // print actual errors
     for(tuple_t tuple : result_indices){
         auto idx = tuple.id;
         auto d_  = tuple.dist_val;
-        std::cout << "dist(p[" << idx << "], q) = " << l1_dist(dataset[idx], q) << " vs dist = " << d_ << std::endl;
+        is_correct = is_correct && (l1_dist(dataset[idx], q) == d_);
+        //std::cout << "dist(p[" << idx << "], q) = " << l1_dist(dataset[idx], q) << " vs dist = " << d_ << std::endl;
     }
     
-    return (num_found >= k);
+    return is_correct;
 }
 
 // tests for the coveringLSH r-near DS
@@ -179,16 +183,18 @@ bool coveringLSH_find_1D_approx_rnear() {
     std::set<tuple_t> result_indices;
     point_t q { 100 };
     int num_found = rLSH.k_near(q, k, result_indices);
-    std::cout << "Number matches found are: " << num_found << std::endl;
+    bool is_correct = (num_found >= k);
+    //std::cout << "Number matches found are: " << num_found << std::endl;
     
     // print actual errors
     for(tuple_t tuple : result_indices){
         auto idx = tuple.id;
         auto d_  = tuple.dist_val;
-        std::cout << "dist(p[" << idx << "], q) = " << l1_dist(dataset[idx], q) << " vs dist = " << d_ << std::endl;
+        is_correct = is_correct && (l1_dist(dataset[idx], q) == d_);
+        //std::cout << "dist(p[" << idx << "], q) = " << l1_dist(dataset[idx], q) << " vs dist = " << d_ << std::endl;
     }
     
-    return (num_found >= k);
+    return is_correct;
 }
 
 #define TEST(func) test_map[ #func ] = func ;
@@ -207,6 +213,8 @@ void run_tests() {
     TEST(bitvec_norm);
     TEST(bitvec_equality);
     TEST(bitvec_dist);
+    TEST(classicalLSH_find_1D_approx_rnear);
+    TEST(coveringLSH_find_1D_approx_rnear);
     
     // run the tests
     size_t num_success = 0;
