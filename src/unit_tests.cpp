@@ -14,6 +14,7 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include "omp.h"
 
 namespace unit_test {
 
@@ -136,13 +137,23 @@ bool classicalLSH_find_1D_approx_rnear() {
     classical::near_lsh rLSH;
     rLSH.set_parameters(r,d,U,c);
     rLSH.set_dataset(dataset);
+    
+    double t1 = omp_get_wtime();
     rLSH.build();
+    double t2 = omp_get_wtime();
+    printf("Time to build classicalLSH with %i threads was %0.5e seconds\n",
+           omp_get_max_threads(), t2 - t1);
     
     // query
     bool is_correct = true;
     std::set<tuple_t> result_indices;
     point_t q { 100 };
+    
+    double t3 = omp_get_wtime();
     int num_found = rLSH.k_near(q, k, result_indices);
+    double t4 = omp_get_wtime();
+    printf("Time to query classicalLSH once with %i threads was %0.5e seconds\n",
+           omp_get_max_threads(), t4 - t3);
     is_correct = (num_found >= k);
     std::cout << "Number matches found are: " << num_found << std::endl;
     
@@ -177,12 +188,20 @@ bool coveringLSH_find_1D_approx_rnear() {
     covering::near_lsh rLSH;
     rLSH.set_parameters(r,d,U,c);
     rLSH.set_dataset(dataset);
+    double t1 = omp_get_wtime();
     rLSH.build();
+    double t2 = omp_get_wtime();
+    printf("Time to build coveringLSH with %i threads was %0.5e seconds\n",
+           omp_get_max_threads(), t2 - t1);
     
     // query
     std::set<tuple_t> result_indices;
     point_t q { 100 };
+    double t3 = omp_get_wtime();
     int num_found = rLSH.k_near(q, k, result_indices);
+    double t4 = omp_get_wtime();
+    printf("Time to query coveringLSH once with %i threads was %0.5e seconds\n",
+           omp_get_max_threads(), t4 - t3);
     bool is_correct = (num_found >= k);
     std::cout << "Number matches found are: " << num_found << std::endl;
     

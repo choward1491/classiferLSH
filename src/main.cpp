@@ -14,10 +14,12 @@
 
 int main(int argc, const char * argv[]) {
     
-    // set the number of threads to use
-    omp_set_num_threads(8);
-    
-    unit_test::run_tests();
+    for(int i = 1; i <= 16; i*=2){
+        omp_set_num_threads(i);
+        unit_test::classicalLSH_find_1D_approx_rnear();
+        unit_test::coveringLSH_find_1D_approx_rnear();
+        std::cout << std::endl;
+    }
     
     // complete the code
     return 0;
