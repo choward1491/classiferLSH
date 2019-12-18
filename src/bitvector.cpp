@@ -49,8 +49,7 @@ namespace util {
         uint32_t out = 0;
         int i1 = (U*dim)/32, d1 = (U*dim) % 32;
         int is = i1, ds = d1;
-        for(uint32_t u = 0; u < U; ++u){
-            if( bits[is] & (1 << ds) ){ ++out; }
+        for(uint32_t u = 0; u < U; ++u){                if( bits[is] & (1 << ds) ){ ++out; }
             ++ds;
             if( ds == 32 ){ ds = ds % 32; ++is; }
         }

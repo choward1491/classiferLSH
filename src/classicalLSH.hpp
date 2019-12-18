@@ -15,6 +15,13 @@
 
 namespace classical {
 
+    // data structure to approximately solve r-near problem
+    // for some input dataset that is a subset of [U]^d for some
+    // universe size U and some dimension d. This data structure
+    // uses the classical LSH approach via i.i.d. randomized hash functions
+    // and making enough corresponding hash tables to make the error probability
+    // extremely small. Note that data structure makes use of threading to
+    // improve the construction and querying of the data structure.
     class near_lsh {
     public:
         

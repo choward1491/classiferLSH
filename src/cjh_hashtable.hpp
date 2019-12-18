@@ -16,7 +16,7 @@ namespace cjh {
 
 // class to represent a simple hash table because it seems
 // the std::unordered_map is doing something weird with
-// buckets and collisions. Let's see how this does
+// buckets and collisions. Let's see how this does..
 template<   typename key_type,
             typename data_type,
             typename hash_func >

@@ -15,6 +15,14 @@
 
 namespace covering {
 
+    // data structure to approximately solve r-near problem
+    // for some input dataset that is a subset of [U]^d for some
+    // universe size U and some dimension d. This data structure
+    // uses the CoveringLSH approach via correlated randomized hash functions
+    // and making a set of such functions such that the hash family is an r-covering.
+    // By being an r-covering, we ensure no false negatives. Note that this
+    // data structure makes use of threading to improve the construction
+    // and querying of the data structure.
     class near_lsh {
     public:
         

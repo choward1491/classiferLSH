@@ -123,7 +123,7 @@ bool classicalLSH_find_1D_approx_rnear() {
     using tuple_t = typename lsh::tuple_t;
     
     // build the dataset
-    uint32_t d = 1, U = 2*1024;
+    uint32_t d = 1, U = 8*1024;
     std::vector<point_t> dataset(U);
     for(uint32_t i = 0; i < U; ++i){
         dataset[i].push_back(i);
@@ -164,7 +164,7 @@ bool coveringLSH_find_1D_approx_rnear() {
     using tuple_t = typename lsh::tuple_t;
     
     // build the dataset
-    uint32_t d = 1, U = 2*1024;
+    uint32_t d = 1, U = 8*1024;
     std::vector<point_t> dataset(U);
     for(uint32_t i = 0; i < U; ++i){
         dataset[i].push_back(i);

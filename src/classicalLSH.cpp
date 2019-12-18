@@ -62,7 +62,7 @@ namespace classical {
             
             // hash dataset into the ith hash table
             for(size_t j = 0; j < N; ++j){
-                ht[bit_dataset[j]] = j;
+                ht[&bit_dataset[j]] = j;
             }
         }// loop number of hash functions
         
@@ -91,7 +91,7 @@ namespace classical {
                 const auto& ht = hash_tables[i];
                 
                 // get the bucket index for the query point
-                auto bucket_id = ht.bucket(qv);
+                auto bucket_id = ht.bucket(&qv);
                 
                 // iterate over the bucket elements
                 auto it = ht.cbegin(bucket_id);

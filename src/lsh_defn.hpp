@@ -38,8 +38,8 @@ namespace lsh {
     struct hash_func {
         hash_func() = default;
         hash_func(const util::bitvec& bv_):bv(bv_){}
-        size_t operator()( const util::bitvec& v) const {
-            auto and_bv = (v & bv);
+        size_t operator()( const util::bitvec* v) const {
+            auto and_bv = (*v & bv);
             auto num_ints = and_bv.num_compressed_ints();
             size_t hash = 1654033;
             for(size_t i = 0; i < num_ints; ++i){
@@ -53,7 +53,7 @@ namespace lsh {
 
     // definition for a hash table type for the LSH purposes
     using hashtable_t = std::unordered_map<
-                                    util::bitvec,
+                                    util::bitvec*,
                                     size_t,
                                     hash_func
                                     >;
