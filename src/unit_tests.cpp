@@ -213,7 +213,7 @@ void run_tests() {
     TEST(bitvec_norm);
     TEST(bitvec_equality);
     TEST(bitvec_dist);
-    //TEST(classicalLSH_find_1D_approx_rnear);
+    TEST(classicalLSH_find_1D_approx_rnear);
     TEST(coveringLSH_find_1D_approx_rnear);
     
     // run the tests

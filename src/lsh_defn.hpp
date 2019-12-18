@@ -11,6 +11,7 @@
 
 #include "bitvector.hpp"
 #include <unordered_map>
+#include "cjh_hashtable.hpp"
 
 namespace lsh {
 
@@ -42,7 +43,7 @@ namespace lsh {
             auto num_ints = and_bv.num_compressed_ints();
             size_t hash = 1654033;
             for(size_t i = 0; i < num_ints; ++i){
-              hash ^= and_bv.get(i) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+              hash ^= and_bv.get_int(i) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
             }
             return hash;
         }
@@ -56,6 +57,12 @@ namespace lsh {
                                     size_t,
                                     hash_func
                                     >;
+
+    /*using hashtable_t = cjh::hashtable<
+                                    util::bitvec,
+                                    size_t,
+                                    hash_func
+                                    >;*/
 
 }
 

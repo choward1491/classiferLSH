@@ -48,10 +48,10 @@ namespace covering {
         uint32_t tot_dim = d*U;
         std::vector<util::bitvec> M(tot_dim);
         
-        //#pragma omp parallel
+        #pragma omp parallel
         {
             // build each of the m(i) vectors
-            //#pragma omp for
+            #pragma omp for
             for(uint32_t i = 0; i < tot_dim; ++i){
                 M[i].set_parameters(r+1, 1);
                 
@@ -68,7 +68,7 @@ namespace covering {
             }
             
             // build each hash table using random bitvector construction
-            //#pragma omp for
+            #pragma omp for
             for(uint32_t i = 0; i < L; ++i){
                 
                 // construct the current v vector
@@ -85,7 +85,7 @@ namespace covering {
                 
                 // get the ith hash table
                 auto& ht = hash_tables[i];
-                ht = lsh::hashtable_t(2*N, hf);
+                ht = lsh::hashtable_t(N, hf);
                 
                 // hash dataset into the ith hash table
                 for(size_t j = 0; j < N; ++j){
@@ -124,7 +124,7 @@ namespace covering {
         
         // loop over hash tables until we find k near points or fail to
         size_t num_ht = hash_tables.size();
-        //#pragma omp parallel for
+        #pragma omp parallel for
         for(size_t i = 0; i < num_ht; ++i){
             
             // only look for new values if we have not
@@ -133,7 +133,6 @@ namespace covering {
                 
                 // get the ith hash table
                 const auto& ht = hash_tables[i];
-                lsh::hash_func hf = ht.hash_function();
                 
                 // get the bucket index for the query point
                 auto bucket_id = ht.bucket(qv);
@@ -145,15 +144,7 @@ namespace covering {
                     
                     // compute distance between elements
                     size_t idx = it->second;
-                    std::cout << "idx = " << idx << std::endl;
                     const auto& match = bit_dataset[idx];
-                    auto h1 = hf(qv);
-                    auto h2 = hf(match);
-                    if( h1 == h2 ){
-                        std::cout << "success: idx = " << idx << std::endl;
-                    }
-                    auto h3 = hf(bit_dataset[98]);
-                    std::cout << "h1 = " << h1 << " vs h3 = " << h3 << std::endl;
                     uint32_t dist_ = util::dist(qv, match);
                     
                     // if the distance is below our approximation
@@ -164,7 +155,7 @@ namespace covering {
                         // only one thread should push to
                         // the vector at once and similarly
                         // for updating the counter
-                        //#pragma omp critical
+                        #pragma omp critical
                         {
                             if( num_found < k ){
                                 lsh::tuple_t output;

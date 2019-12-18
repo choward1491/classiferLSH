@@ -15,7 +15,7 @@
 int main(int argc, const char * argv[]) {
     
     // set the number of threads to use
-    omp_set_num_threads(1);
+    omp_set_num_threads(8);
     
     unit_test::run_tests();
     
