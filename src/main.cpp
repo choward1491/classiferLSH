@@ -14,17 +14,8 @@
 
 int main(int argc, const char * argv[]) {
     
-    /*
-    for(int i = 1; i <= 16; i*=2){
-        unit_test::classicalLSH_find_1D_approx_rnear(i);
-        unit_test::coveringLSH_find_1D_approx_rnear(i);
-        std::cout << std::endl;
-    }*/
-    
-    unit_test::classicalLSH_find_1D_approx_knearest(8, 5);
-    
-    unit_test::coveringLSH_find_1D_approx_knearest(8, 5);
-    
+    unit_test::simple_2D_binary_classification_classical(8, 5, 512);
+    unit_test::simple_2D_binary_classification_covering(8, 5, 512);
     // complete the code
     return 0;
 }

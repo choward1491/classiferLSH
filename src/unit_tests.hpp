@@ -29,6 +29,10 @@ bool classicalLSH_find_1D_approx_knearest(int num_threads, int k, uint32_t U = 8
 bool coveringLSH_find_1D_approx_rnear(int num_threads, uint32_t U = 8*1024);
 bool coveringLSH_find_1D_approx_knearest(int num_threads, int k, uint32_t U = 8*1024);
 
+// tests for classification
+void simple_2D_binary_classification_classical(int num_threads, int k, uint32_t U = 256);
+void simple_2D_binary_classification_covering(int num_threads, int k, uint32_t U = 256);
+
 // run the tests
 void run_tests();
 

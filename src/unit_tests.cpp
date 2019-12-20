@@ -16,6 +16,7 @@
 #include <map>
 #include <string>
 #include "omp.h"
+#include <stdio.h>
 
 namespace unit_test {
 
@@ -331,6 +332,181 @@ bool coveringLSH_find_1D_approx_knearest(int num_threads, int k, uint32_t U) {
     }
     
     return is_correct;
+}
+
+void simple_2D_binary_classification_classical(int num_threads, int k, uint32_t U) {
+    using point_t = typename lsh::point_t;
+    using tuple_t = typename lsh::tuple_t;
+    using knearest_t = typename approx::knearest<classical::near_lsh>;
+    
+    // set the number of threads
+    omp_set_num_threads(num_threads);
+    
+    // random number stuff
+    uint32_t seed = 123456789;
+    uint32_t m = -1, a = 1103515245, b = 12345;
+    
+    // build the dataset
+    uint32_t n = (U*U)/6;
+    uint32_t d = 2;
+    std::set<point_t> sample_points;
+    for(uint32_t i = 0; i < n; ++i){
+        seed = ( a * seed + b ) % m;
+        point_t pt(2);
+        pt[0] = seed % (U+1);
+        seed = ( a * seed + b ) % m;
+        pt[1] = seed % (U+1);
+        sample_points.insert(pt);
+    }
+    
+    std::vector<point_t>    dataset(sample_points.size());
+    std::vector<uint32_t>   labels(sample_points.size());
+    point_t center(2, U/2);
+    {
+        uint32_t ii = 0;
+        for(auto& pt: sample_points){
+            dataset[ii] = pt;
+            labels[ii++] = l1_dist(center,pt) > (U / 5);
+        }
+    }
+    
+    // choose the parameters we care about
+    uint32_t c = 2;
+    std::vector<uint32_t> radii { 1, 2, 3, 4, 5, 6 };
+    
+    // build the LSH for r-near
+    knearest_t knn_ds;
+    knn_ds.set_parameters(radii, d, U, c);
+    knn_ds.set_dataset(dataset);
+    
+    double t1 = omp_get_wtime();
+    knn_ds.build();
+    double t2 = omp_get_wtime();
+    printf("Time to build knn based on classicalLSH with %i threads was %0.5e seconds\n",
+           omp_get_max_threads(), t2 - t1);
+    
+    // query
+    std::set<tuple_t> result_indices;
+    point_t q(2);
+    FILE* file = fopen("/Users/cjh/Documents/code/classiferLSH/output/classic_circle_class2.csv", "w");
+    
+    if( file ){
+        // try to see how the classifier performs
+        for(uint32_t i = 0; i <= U; ++i){
+            for(uint32_t j=0; j <= U; ++j){
+                q[0] = i; q[1] = j;
+                uint32_t label = 0, true_label = l1_dist(center, q) > (U / 5);
+                result_indices.clear();
+                knn_ds.k_nearest(q, k, result_indices);
+                
+                // try to figure out what to label the result
+                if( result_indices.size()){
+                    int num_0 = 0, num_1 = 1;
+                    for(auto tuple: result_indices ){
+                        if( labels[tuple.id] ){ ++num_1; }
+                        else{ ++num_0; }
+                    }
+                    if( num_1 >= num_0 ){ label = 1; }
+                }
+                
+                // print the result
+                fprintf(file, "%u, %u, %u, %u\n", i, j, true_label, label);
+                //std::cout << i << " " << j << " " << true_label << " " << label << std::endl;
+                
+            }// end for j
+        }// end for i
+        
+        fclose(file); file = nullptr;
+    }else{
+        std::cout << "Could not open the file!" << std::endl;
+    }
+}
+void simple_2D_binary_classification_covering(int num_threads, int k, uint32_t U) {
+    using point_t = typename lsh::point_t;
+    using tuple_t = typename lsh::tuple_t;
+    using knearest_t = typename approx::knearest<covering::near_lsh>;
+    
+    // set the number of threads
+    omp_set_num_threads(num_threads);
+    
+    // random number stuff
+    uint32_t seed = 123456789;
+    uint32_t m = -1, a = 1103515245, b = 12345;
+    
+    // build the dataset
+    uint32_t n = (U*U)/6;
+    uint32_t d = 2;
+    std::set<point_t> sample_points;
+    for(uint32_t i = 0; i < n; ++i){
+        seed = ( a * seed + b ) % m;
+        point_t pt(2);
+        pt[0] = seed % (U+1);
+        seed = ( a * seed + b ) % m;
+        pt[1] = seed % (U+1);
+        sample_points.insert(pt);
+    }
+    
+    std::vector<point_t>    dataset(sample_points.size());
+    std::vector<uint32_t>   labels(sample_points.size());
+    point_t center(2, U/2);
+    {
+        uint32_t ii = 0;
+        for(auto& pt: sample_points){
+            dataset[ii] = pt;
+            labels[ii++] = l1_dist(center,pt) > (U / 5);
+        }
+    }
+    
+    // choose the parameters we care about
+    uint32_t c = 2;
+    std::vector<uint32_t> radii { 1, 2, 3, 4, 5, 6 };
+    
+    // build the LSH for r-near
+    knearest_t knn_ds;
+    knn_ds.set_parameters(radii, d, U, c);
+    knn_ds.set_dataset(dataset);
+    
+    double t1 = omp_get_wtime();
+    knn_ds.build();
+    double t2 = omp_get_wtime();
+    printf("Time to build knn based on coveringLSH with %i threads was %0.5e seconds\n",
+           omp_get_max_threads(), t2 - t1);
+    
+    // query
+    std::set<tuple_t> result_indices;
+    point_t q(2);
+    FILE* file = fopen("/Users/cjh/Documents/code/classiferLSH/output/covering_circle_class2.csv", "w");
+    
+    if( file ){
+        // try to see how the classifier performs
+        for(uint32_t i = 0; i <= U; ++i){
+            for(uint32_t j=0; j <= U; ++j){
+                q[0] = i; q[1] = j;
+                uint32_t label = 0, true_label = l1_dist(center, q) > (U / 5);
+                result_indices.clear();
+                knn_ds.k_nearest(q, k, result_indices);
+                
+                // try to figure out what to label the result
+                if( result_indices.size()){
+                    int num_0 = 0, num_1 = 1;
+                    for(auto tuple: result_indices ){
+                        if( labels[tuple.id] ){ ++num_1; }
+                        else{ ++num_0; }
+                    }
+                    if( num_1 >= num_0 ){ label = 1; }
+                }
+                
+                // print the result
+                fprintf(file, "%u, %u, %u, %u\n", i, j, true_label, label);
+                //std::cout << i << " " << j << " " << true_label << " " << label << std::endl;
+                
+            }// end for j
+        }// end for i
+        
+        fclose(file); file = nullptr;
+    }else{
+        std::cout << "Could not open the file!" << std::endl;
+    }
 }
 
 
