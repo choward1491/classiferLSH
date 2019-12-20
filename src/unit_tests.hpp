@@ -9,6 +9,8 @@
 #ifndef unit_tests_hpp
 #define unit_tests_hpp
 
+#include <cstdint>
+
 namespace unit_test {
 
 // tests for the bitvector class
@@ -20,10 +22,12 @@ bool bitvec_equality();
 bool bitvec_dist(); // Hamming metric
 
 // tests for the classicalLSH r-near DS
-bool classicalLSH_find_1D_approx_rnear();
+bool classicalLSH_find_1D_approx_rnear(int num_threads, uint32_t U = 8*1024);
+bool classicalLSH_find_1D_approx_knearest(int num_threads, int k, uint32_t U = 8*1024);
 
 // tests for the coveringLSH r-near DS
-bool coveringLSH_find_1D_approx_rnear();
+bool coveringLSH_find_1D_approx_rnear(int num_threads, uint32_t U = 8*1024);
+bool coveringLSH_find_1D_approx_knearest(int num_threads, int k, uint32_t U = 8*1024);
 
 // run the tests
 void run_tests();

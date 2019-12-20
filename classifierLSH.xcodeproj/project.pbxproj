@@ -56,6 +56,7 @@
 		3F33231523A5AD1600D01862 /* unit_tests.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = unit_tests.hpp; sourceTree = "<group>"; };
 		3F33231923A6F2E200D01862 /* lsh_defn.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = lsh_defn.hpp; sourceTree = "<group>"; };
 		3F33231A23A98FBB00D01862 /* cjh_hashtable.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = cjh_hashtable.hpp; sourceTree = "<group>"; };
+		3F33231B23AC674D00D01862 /* knearest.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = knearest.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +103,7 @@
 				3F33231523A5AD1600D01862 /* unit_tests.hpp */,
 				3F33231923A6F2E200D01862 /* lsh_defn.hpp */,
 				3F33231A23A98FBB00D01862 /* cjh_hashtable.hpp */,
+				3F33231B23AC674D00D01862 /* knearest.hpp */,
 			);
 			path = src;
 			sourceTree = "<group>";

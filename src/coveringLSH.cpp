@@ -119,8 +119,7 @@ namespace covering {
         orig2bitvec(q, qv);
         
         // counter keeping track of number found
-        int num_found = 0;
-        nearest_ind.clear();
+        int num_found = nearest_ind.size();
         
         // loop over hash tables until we find k near points or fail to
         size_t num_ht = hash_tables.size();

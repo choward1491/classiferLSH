@@ -10,6 +10,7 @@
 #include "bitvector.hpp"
 #include "classicalLSH.hpp"
 #include "coveringLSH.hpp"
+#include "knearest.hpp"
 #include <cmath>
 #include <iostream>
 #include <map>
@@ -118,20 +119,23 @@ uint32_t l1_dist(const std::vector<uint32_t>& p1,
 }
 
 // tests for the classicalLSH r-near DS
-bool classicalLSH_find_1D_approx_rnear() {
+bool classicalLSH_find_1D_approx_rnear(int num_threads, uint32_t U) {
     
     using point_t = typename lsh::point_t;
     using tuple_t = typename lsh::tuple_t;
     
+    // set the number of threads
+    omp_set_num_threads(num_threads);
+    
     // build the dataset
-    uint32_t d = 1, U = 8*1024;
-    std::vector<point_t> dataset(U);
-    for(uint32_t i = 0; i < U; ++i){
+    uint32_t d = 1;
+    std::vector<point_t> dataset(U+1);
+    for(uint32_t i = 0; i <= U; ++i){
         dataset[i].push_back(i);
     }
     
     // choose the parameters we care about
-    uint32_t r = 5, c = 2, k = 5;
+    uint32_t r = 5, c = 2, k = r;
     
     // build the LSH for r-near
     classical::near_lsh rLSH;
@@ -169,20 +173,78 @@ bool classicalLSH_find_1D_approx_rnear() {
     return is_correct;
 }
 
-// tests for the coveringLSH r-near DS
-bool coveringLSH_find_1D_approx_rnear() {
+bool classicalLSH_find_1D_approx_knearest(int num_threads, int k, uint32_t U) {
     using point_t = typename lsh::point_t;
     using tuple_t = typename lsh::tuple_t;
+    using knearest_t = typename approx::knearest<classical::near_lsh>;
+    
+    // set the number of threads
+    omp_set_num_threads(num_threads);
     
     // build the dataset
-    uint32_t d = 1, U = 8*1024;
-    std::vector<point_t> dataset(U);
-    for(uint32_t i = 0; i < U; ++i){
+    uint32_t d = 1;
+    std::vector<point_t> dataset(U+1);
+    for(uint32_t i = 0; i <= U; ++i){
         dataset[i].push_back(i);
     }
     
     // choose the parameters we care about
-    uint32_t r = 5, c = 2, k = 5;
+    uint32_t c = 2;
+    std::vector<uint32_t> radii { 1, 2, 3, 4, 5, 6 };
+    
+    // build the LSH for r-near
+    knearest_t knn_ds;
+    knn_ds.set_parameters(radii, d, U, c);
+    knn_ds.set_dataset(dataset);
+    
+    double t1 = omp_get_wtime();
+    knn_ds.build();
+    double t2 = omp_get_wtime();
+    printf("Time to build knn based on classicalLSH with %i threads was %0.5e seconds\n",
+           omp_get_max_threads(), t2 - t1);
+    
+    // query
+    bool is_correct = true;
+    std::set<tuple_t> result_indices;
+    point_t q { 100 };
+    
+    double t3 = omp_get_wtime();
+    int num_found = knn_ds.k_nearest(q, k, result_indices);
+    double t4 = omp_get_wtime();
+    printf("Time to query knn based on classicalLSH once with %i threads was %0.5e seconds\n",
+           omp_get_max_threads(), t4 - t3);
+    is_correct = (num_found >= k);
+    std::cout << "Number matches found are: " << num_found << std::endl;
+    
+    
+    // print actual errors
+    for(tuple_t tuple : result_indices){
+        auto idx = tuple.id;
+        auto d_  = tuple.dist_val;
+        is_correct = is_correct && (l1_dist(dataset[idx], q) == d_);
+        std::cout << "dist(p[" << idx << "], q) = " << l1_dist(dataset[idx], q) << " vs dist = " << d_ << std::endl;
+    }
+    
+    return is_correct;
+}
+
+// tests for the coveringLSH r-near DS
+bool coveringLSH_find_1D_approx_rnear(int num_threads, uint32_t U) {
+    using point_t = typename lsh::point_t;
+    using tuple_t = typename lsh::tuple_t;
+    
+    // set the number of threads
+    omp_set_num_threads(num_threads);
+    
+    // build the dataset
+    uint32_t d = 1;
+    std::vector<point_t> dataset(U+1);
+    for(uint32_t i = 0; i <= U; ++i){
+        dataset[i].push_back(i);
+    }
+    
+    // choose the parameters we care about
+    uint32_t r = 5, c = 2, k = r;
     
     // build the LSH for r-near
     covering::near_lsh rLSH;
@@ -216,6 +278,62 @@ bool coveringLSH_find_1D_approx_rnear() {
     return is_correct;
 }
 
+bool coveringLSH_find_1D_approx_knearest(int num_threads, int k, uint32_t U) {
+    using point_t = typename lsh::point_t;
+    using tuple_t = typename lsh::tuple_t;
+    using knearest_t = typename approx::knearest<covering::near_lsh>;
+    
+    // set the number of threads
+    omp_set_num_threads(num_threads);
+    
+    // build the dataset
+    uint32_t d = 1;
+    std::vector<point_t> dataset(U+1);
+    for(uint32_t i = 0; i <= U; ++i){
+        dataset[i].push_back(i);
+    }
+    
+    // choose the parameters we care about
+    uint32_t c = 2;
+    std::vector<uint32_t> radii { 1, 2, 3, 4, 5, 6 };
+    
+    // build the LSH for r-near
+    knearest_t knn_ds;
+    knn_ds.set_parameters(radii, d, U, c);
+    knn_ds.set_dataset(dataset);
+    
+    double t1 = omp_get_wtime();
+    knn_ds.build();
+    double t2 = omp_get_wtime();
+    printf("Time to build knn based on coveringLSH with %i threads was %0.5e seconds\n",
+           omp_get_max_threads(), t2 - t1);
+    
+    // query
+    bool is_correct = true;
+    std::set<tuple_t> result_indices;
+    point_t q { 100 };
+    
+    double t3 = omp_get_wtime();
+    int num_found = knn_ds.k_nearest(q, k, result_indices);
+    double t4 = omp_get_wtime();
+    printf("Time to query knn based on coveringLSH once with %i threads was %0.5e seconds\n",
+           omp_get_max_threads(), t4 - t3);
+    is_correct = (num_found >= k);
+    std::cout << "Number matches found are: " << num_found << std::endl;
+    
+    
+    // print actual errors
+    for(tuple_t tuple : result_indices){
+        auto idx = tuple.id;
+        auto d_  = tuple.dist_val;
+        is_correct = is_correct && (l1_dist(dataset[idx], q) == d_);
+        std::cout << "dist(p[" << idx << "], q) = " << l1_dist(dataset[idx], q) << " vs dist = " << d_ << std::endl;
+    }
+    
+    return is_correct;
+}
+
+
 #define TEST(func) test_map[ #func ] = func ;
 
 // run the tests
@@ -232,8 +350,8 @@ void run_tests() {
     TEST(bitvec_norm);
     TEST(bitvec_equality);
     TEST(bitvec_dist);
-    TEST(classicalLSH_find_1D_approx_rnear);
-    TEST(coveringLSH_find_1D_approx_rnear);
+    //TEST(classicalLSH_find_1D_approx_rnear);
+    //TEST(coveringLSH_find_1D_approx_rnear);
     
     // run the tests
     size_t num_success = 0;

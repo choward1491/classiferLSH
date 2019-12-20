@@ -31,7 +31,7 @@ namespace classical {
     void near_lsh::build() {
         
         // compute nunmber of hash functions and corresponding hash tables
-        uint32_t L = 20 * static_cast<uint32_t>(std::pow(ds_ref->size(), 1.0/c));
+        uint32_t L = 10 * static_cast<uint32_t>(std::pow(ds_ref->size(), 1.0/c));
         
         // resize the hash table list
         hash_tables.clear();
@@ -75,8 +75,7 @@ namespace classical {
         orig2bitvec(q, qv);
         
         // counter keeping track of number found
-        int num_found = 0;
-        nearest_ind.clear();
+        int num_found = nearest_ind.size();
         
         // loop over hash tables until we find k near points or fail to
         size_t num_ht = hash_tables.size();
